@@ -107,8 +107,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold">Capachica Explorer</h1>
-                        <p class="text-sm opacity-90">Tu ventana al Titicaca</p>
+                        <h1 class="text-2xl font-bold">TURIX</h1>
+                        <p class="text-sm opacity-90">Tu ventana a un nuevo destino</p>
                     </div>
                 </div>
 
@@ -139,7 +139,7 @@
 
             <div class="text-center relative z-10">
                 <h2 class="text-5xl md:text-7xl font-bold mb-6 floating">
-                    Descubre <span class="gradient-text">Capachica</span>
+                    Descubre <span class="gradient-text">Nuevos Lugares</span>
                 </h2>
                 <p class="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
                     Sumérgete en la magia de la península más hermosa del Lago Titicaca, donde cada amanecer es una obra de arte y cada experiencia es única.

@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <!-- Descripción con estilo mejorado -->
+                    <!-- Descripción -->
                     <div class="mb-8">
                         <h2 class="text-lg font-semibold text-gray-800 mb-3">Sobre este lugar</h2>
                         <div class="text-gray-700 leading-relaxed space-y-4">
@@ -54,7 +54,7 @@
                         </div>
                     </div>
 
-                    <!-- Ubicación con mapa (placeholder) -->
+                    <!-- 🗺️ Ubicación -->
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,24 +63,16 @@
                             </svg>
                             Ubicación
                         </h2>
-                        <div class="mt-2 flex items-start">
-                            <span class="text-sm text-gray-600">
-                                <span class="font-medium">Coordenadas:</span> {{ $attraction->latitude }}, {{ $attraction->longitude }}
-                            </span>
+                        <div class="mt-2 text-sm text-gray-600">
+                            <span class="font-medium">Coordenadas:</span> {{ $attraction->latitude }}, {{ $attraction->longitude }}
                         </div>
-                        <div class="mt-4 bg-gray-100 rounded-lg h-64 flex items-center justify-center border border-gray-200">
-                            <div class="text-center text-gray-500">
-                                <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-                                </svg>
-                                <p class="mt-2">Mapa disponible pronto</p>
-                            </div>
-                        </div>
+
+                        <div id="attractionMap" class="mt-4 bg-gray-100 rounded-lg border border-gray-200" style="height: 400px; width: 100%;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sección de comentarios y reseñas -->
+            <!-- Comentarios y Reseñas -->
             <div class="lg:w-1/3 order-1 lg:order-2">
                 <div class="bg-white rounded-2xl shadow-md p-6 sticky top-6">
                     <h2 class="text-xl font-semibold mb-6 flex items-center">
@@ -90,7 +82,6 @@
                         Comentarios y Reseñas
                     </h2>
 
-                    <!-- Mensajes del sistema -->
                     @if(session('success'))
                         <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-md flex items-start">
                             <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,30 +107,20 @@
                         </div>
                     @endif
 
-                    <!-- Formulario de comentarios -->
                     <form method="POST" action="{{ route('tourist.attraction.comment', $attraction->id) }}" class="mb-8">
                         @csrf
                         <div class="mb-4">
                             <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Tu comentario</label>
-                            <textarea
-                                id="comment"
-                                name="comment"
-                                required
-                                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
-                                placeholder="Comparte tu experiencia aquí..."
-                                rows="4"
-                            ></textarea>
+                            <textarea id="comment" name="comment" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow" placeholder="Comparte tu experiencia aquí..." rows="4"></textarea>
                         </div>
 
                         <div class="mb-5">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tu calificación</label>
-                            <div class="flex items-center">
-                                <div class="rating flex">
-                                    @for ($i = 5; $i >= 1; $i--)
-                                        <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" class="hidden" {{ $i == 5 ? 'checked' : '' }}>
-                                        <label for="star{{ $i }}" class="cursor-pointer text-2xl px-1 text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400">★</label>
-                                    @endfor
-                                </div>
+                            <div class="flex items-center rating">
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" class="hidden" {{ $i == 5 ? 'checked' : '' }}>
+                                    <label for="star{{ $i }}" class="cursor-pointer text-2xl px-1 text-gray-300 hover:text-yellow-400">★</label>
+                                @endfor
                                 <span class="ml-2 text-sm text-gray-500" id="ratingText">Excelente</span>
                             </div>
                         </div>
@@ -152,7 +133,6 @@
                         </button>
                     </form>
 
-                    <!-- Lista de comentarios -->
                     <div class="mt-8">
                         <h3 class="text-lg font-medium mb-4 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,12 +156,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex items-center">
-                                            <div class="flex text-yellow-400">
-                                                @for ($i = 0; $i < 5; $i++)
-                                                    <span>{{ $i < $comment->rating ? '★' : '☆' }}</span>
-                                                @endfor
-                                            </div>
+                                        <div class="flex text-yellow-400">
+                                            @for ($i = 0; $i < 5; $i++)
+                                                <span>{{ $i < $comment->rating ? '★' : '☆' }}</span>
+                                            @endfor
                                         </div>
                                     </div>
                                     <div class="mt-3 text-gray-700 text-sm">
@@ -204,82 +182,59 @@
         </div>
     </div>
 
-    <!-- Script para la funcionalidad de estrellas interactivas -->
+    <!-- ⭐ Interactividad estrellas -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const ratingLabels = document.querySelectorAll('.rating label');
             const ratingText = document.getElementById('ratingText');
             const ratingTexts = ['Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'];
 
             ratingLabels.forEach((label, index) => {
                 label.addEventListener('click', () => {
-                    // Actualizar el texto de calificación
                     const rating = 5 - index;
-                    ratingText.textContent = ratingTexts[rating-1];
+                    ratingText.textContent = ratingTexts[rating - 1];
 
-                    // Actualizar visualmente las estrellas
                     ratingLabels.forEach((l, i) => {
-                        if (i >= index) {
-                            l.classList.add('text-yellow-400');
-                            l.classList.remove('text-gray-300');
-                        } else {
-                            l.classList.add('text-gray-300');
-                            l.classList.remove('text-yellow-400');
-                        }
+                        l.classList.toggle('text-yellow-400', i >= index);
+                        l.classList.toggle('text-gray-300', i < index);
                     });
                 });
-
-                label.addEventListener('mouseover', () => {
-                    // Efecto hover en las estrellas
-                    ratingLabels.forEach((l, i) => {
-                        if (i >= index) {
-                            l.classList.add('text-yellow-400');
-                            l.classList.remove('text-gray-300');
-                        } else {
-                            l.classList.add('text-gray-300');
-                            l.classList.remove('text-yellow-400');
-                        }
-                    });
-                });
-            });
-
-            // Restaurar estrellas seleccionadas cuando el mouse sale del área de calificación
-            document.querySelector('.rating').addEventListener('mouseleave', () => {
-                const selectedRating = document.querySelector('.rating input:checked');
-                if (selectedRating) {
-                    const selectedIndex = Array.from(document.querySelectorAll('.rating input')).indexOf(selectedRating);
-                    ratingLabels.forEach((l, i) => {
-                        if (i >= selectedIndex) {
-                            l.classList.add('text-yellow-400');
-                            l.classList.remove('text-gray-300');
-                        } else {
-                            l.classList.add('text-gray-300');
-                            l.classList.remove('text-yellow-400');
-                        }
-                    });
-                }
             });
         });
     </script>
 
+    <!-- 🗺️ Leaflet.js Mapa gratuito -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const lat = parseFloat("{{ $attraction->latitude }}");
+            const lng = parseFloat("{{ $attraction->longitude }}");
+
+            if (isNaN(lat) || isNaN(lng)) {
+                document.getElementById("attractionMap").innerHTML =
+                    "<p class='text-center p-6 text-gray-600'>Error: Coordenadas no válidas.</p>";
+                return;
+            }
+
+            const map = L.map("attractionMap").setView([lat, lng], 14);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "© OpenStreetMap contributors",
+            }).addTo(map);
+
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup("<b>{{ $attraction->name }}</b>")
+                .openPopup();
+        });
+    </script>
+
     <style>
-        /* Estilo para scrollbar personalizado */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
-        }
+        /* Scrollbar personalizada */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
     </style>
 </x-app-layout>
